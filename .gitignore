@@ -1,0 +1,17 @@
+# Ignorar projetos com repositórios próprios
+contribuindo-num-projeto-open-source/
+dio-resumos-git-e-github/
+hello-world/
+repo-local/
+trabalhando-com-branches/
+
+# Ignorar pasta de estudos local
+Estudos/
+
+# Ignorar arquivos temporários e desnecessários
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+
+
