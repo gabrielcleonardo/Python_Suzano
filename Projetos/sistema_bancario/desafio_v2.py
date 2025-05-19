@@ -51,6 +51,13 @@ def saque (*, saldo, valor, extrato, limite, numero_saques, limite_saques):
 
     return saldo, extrato, numero_saques
 
+def exibir_extrato(saldo, *, extrato):
+    print("\n================ EXTRATO ================")
+    print("Não foram realizadas movimentações." if not extrato else extrato)
+    print(f"\nSaldo: R$ {saldo:.2f}")
+    print("==========================================")
+
+
 
 while True:
 
@@ -72,10 +79,8 @@ while True:
     )
 
     elif opcao == "e":
-        print("\n================ EXTRATO ================")
-        print("Não foram realizadas movimentações." if not extrato else extrato)
-        print(f"\nSaldo: R$ {saldo:.2f}")
-        print("==========================================")
+        exibir_extrato(saldo, extrato=extrato)
+
     elif opcao == "q":
         break
 
