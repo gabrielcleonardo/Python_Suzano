@@ -4,6 +4,7 @@ menu = """
 [s] Sacar
 [e] Extrato
 [nu] Novo usuário
+[nc] Nova conta
 [q] Sair
 
 => """
@@ -14,6 +15,8 @@ extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
 usuarios = []
+contas = []
+AGENCIA = "0001"
 
 def deposito(saldo, valor, extrato, /):
     if valor > 0:
@@ -84,6 +87,21 @@ def filtrar_usuario(cpf, usuarios):
     usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
     return usuarios_filtrados[0] if usuarios_filtrados else None
 
+def criar_conta(agencia, numero_conta, usuarios):
+    cpf = input("Informe o CPF do usuário: ")
+    usuario = filtrar_usuario(cpf, usuarios)
+
+    if usuario:
+        print("✅ Conta criada com sucesso!")
+        return {
+            "agencia": agencia,
+            "numero_conta": numero_conta,
+            "usuario": usuario
+        }
+
+    print("❌ Usuário não encontrado. Não foi possível criar a conta.")
+    return None
+
 while True:
 
     opcao = input(menu)
@@ -111,6 +129,13 @@ while True:
 
     elif opcao == "nu":
         criar_usuario(usuarios)
+
+    elif opcao == "nc":
+        numero_conta = len(contas) + 1
+        conta = criar_conta(AGENCIA, numero_conta, usuarios)
+
+        if conta:
+            contas.append(conta)
 
     else:
         print("Operação inválida, por favor selecione novamente a operação desejada.")
