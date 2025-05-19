@@ -3,6 +3,7 @@ menu = """
 [d] Depositar
 [s] Sacar
 [e] Extrato
+[nu] Novo usuário
 [q] Sair
 
 => """
@@ -12,6 +13,7 @@ limite = 500
 extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
+usuarios = []
 
 def deposito(saldo, valor, extrato, /):
     if valor > 0:
@@ -57,7 +59,30 @@ def exibir_extrato(saldo, *, extrato):
     print(f"\nSaldo: R$ {saldo:.2f}")
     print("==========================================")
 
+def criar_usuario(usuarios):
+    cpf = input("Informe o CPF (somente números): ")
+    usuario = filtrar_usuario(cpf, usuarios)
 
+    if usuario:
+        print("Já existe um usuário com esse CPF!")
+        return
+
+    nome = input("Informe o nome completo: ")
+    data_nascimento = input("Informe a data de nascimento (dd-mm-aaaa): ")
+    endereco = input("Informe o endereço (logradouro, número - bairro - cidade/UF): ")
+
+    usuarios.append({
+        "nome": nome,
+        "data_nascimento": data_nascimento,
+        "cpf": cpf,
+        "endereco": endereco,
+    })
+
+    print("✅ Usuário criado com sucesso!")
+
+def filtrar_usuario(cpf, usuarios):
+    usuarios_filtrados = [usuario for usuario in usuarios if usuario["cpf"] == cpf]
+    return usuarios_filtrados[0] if usuarios_filtrados else None
 
 while True:
 
@@ -83,6 +108,9 @@ while True:
 
     elif opcao == "q":
         break
+
+    elif opcao == "nu":
+        criar_usuario(usuarios)
 
     else:
         print("Operação inválida, por favor selecione novamente a operação desejada.")
