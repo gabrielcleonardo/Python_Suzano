@@ -1,22 +1,4 @@
-menu = """
-
-[d] Depositar
-[s] Sacar
-[e] Extrato
-[nu] Novo usuário
-[nc] Nova conta
-[lc] Listar contas
-[q] Sair
-
-=> """
-
-saldo = 0
-limite = 500
-extrato = ""
-numero_saques = 0
 LIMITE_SAQUES = 3
-usuarios = []
-contas = []
 AGENCIA = "0001"
 
 def deposito(saldo, valor, extrato, /):
@@ -112,43 +94,64 @@ def listar_contas(contas):
         """
         print(linha)
 
-while True:
+def main():
 
-    opcao = input(menu)
+    menu = """
+    [d] Depositar
+    [s] Sacar
+    [e] Extrato
+    [nu] Novo usuário
+    [nc] Nova conta
+    [lc] Listar contas
+    [q] Sair
+    => """
 
-    if opcao == "d":
-        valor = float(input("Informe o valor do depósito: "))
-        saldo, extrato = deposito(saldo, valor, extrato)
+    saldo = 0
+    limite = 500
+    extrato = ""
+    numero_saques = 0
+    usuarios = []
+    contas = []
 
-    elif opcao == "s":
-        valor = float(input("Informe o valor do saque: "))
-        saldo, extrato, numero_saques = saque(
-        saldo=saldo,
-        valor=valor,
-        extrato=extrato,
-        limite=limite,
-        numero_saques=numero_saques,
-        limite_saques=LIMITE_SAQUES
-    )
+    while True:
 
-    elif opcao == "e":
-        exibir_extrato(saldo, extrato=extrato)
+        opcao = input(menu)
 
-    elif opcao == "q":
-        break
+        if opcao == "d":
+            valor = float(input("Informe o valor do depósito: "))
+            saldo, extrato = deposito(saldo, valor, extrato)
 
-    elif opcao == "nu":
-        criar_usuario(usuarios)
+        elif opcao == "s":
+            valor = float(input("Informe o valor do saque: "))
+            saldo, extrato, numero_saques = saque(
+            saldo=saldo,
+            valor=valor,
+            extrato=extrato,
+            limite=limite,
+            numero_saques=numero_saques,
+            limite_saques=LIMITE_SAQUES
+        )
 
-    elif opcao == "nc":
-        numero_conta = len(contas) + 1
-        conta = criar_conta(AGENCIA, numero_conta, usuarios)
+        elif opcao == "e":
+            exibir_extrato(saldo, extrato=extrato)
 
-        if conta:
-            contas.append(conta)
+        elif opcao == "q":
+            break
 
-    elif opcao == "lc":
-        listar_contas(contas)
+        elif opcao == "nu":
+            criar_usuario(usuarios)
 
-    else:
-        print("Operação inválida, por favor selecione novamente a operação desejada.")
+        elif opcao == "nc":
+            numero_conta = len(contas) + 1
+            conta = criar_conta(AGENCIA, numero_conta, usuarios)
+
+            if conta:
+                contas.append(conta)
+
+        elif opcao == "lc":
+            listar_contas(contas)
+
+        else:
+            print("Operação inválida, por favor selecione novamente a operação desejada.")
+
+main()
