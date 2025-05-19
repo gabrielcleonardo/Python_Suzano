@@ -5,6 +5,7 @@ menu = """
 [e] Extrato
 [nu] Novo usuário
 [nc] Nova conta
+[lc] Listar contas
 [q] Sair
 
 => """
@@ -102,6 +103,15 @@ def criar_conta(agencia, numero_conta, usuarios):
     print("❌ Usuário não encontrado. Não foi possível criar a conta.")
     return None
 
+def listar_contas(contas):
+    for conta in contas:
+        linha = f"""
+        Agência:\t{conta['agencia']}
+        Conta:\t\t{conta['numero_conta']}
+        Titular:\t{conta['usuario']['nome']}
+        """
+        print(linha)
+
 while True:
 
     opcao = input(menu)
@@ -136,6 +146,9 @@ while True:
 
         if conta:
             contas.append(conta)
+
+    elif opcao == "lc":
+        listar_contas(contas)
 
     else:
         print("Operação inválida, por favor selecione novamente a operação desejada.")
