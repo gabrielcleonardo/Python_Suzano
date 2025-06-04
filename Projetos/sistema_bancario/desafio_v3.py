@@ -41,3 +41,10 @@ class Deposito(Transacao):
         sucesso = conta.depositar(self.valor)
         if sucesso:
             conta.historico.adicionar_transacao(self)
+
+class Historico:
+    def __init__(self):
+        self.transacoes = []
+
+    def adicionar_transacao(self, transacao):
+        self.transacoes.append(transacao)
