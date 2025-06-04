@@ -1,4 +1,5 @@
 from datetime import date
+from abc import ABC, abstractmethod
 
 class Cliente:
     def __init__(self, endereco: str):
@@ -17,3 +18,26 @@ class PessoaFisica(Cliente):
         self.nome = nome
         self.cpf = cpf
         self.data_nascimento = data_nascimento
+
+class Transacao(ABC):
+    @abstractmethod
+    def registrar(self, conta):
+        pass
+
+class Saque(Transacao):
+    def __init__(self, valor: float):
+        self.valor = valor
+
+    def registrar(self, conta):
+        sucesso = conta.sacar(self.valor)
+        if sucesso:
+            conta.historico.adicionar_transacao(self)
+
+class Deposito(Transacao):
+    def __init__(self, valor: float):
+        self.valor = valor
+
+    def registrar(self, conta):
+        sucesso = conta.depositar(self.valor)
+        if sucesso:
+            conta.historico.adicionar_transacao(self)
