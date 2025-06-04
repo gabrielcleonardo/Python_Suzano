@@ -20,6 +20,11 @@ class PessoaFisica(Cliente):
         self.data_nascimento = data_nascimento
 
 class Transacao(ABC):
+    @property
+    @abstractmethod
+    def valor(self):
+        pass
+
     @abstractmethod
     def registrar(self, conta):
         pass
@@ -27,6 +32,10 @@ class Transacao(ABC):
 class Saque(Transacao):
     def __init__(self, valor: float):
         self.valor = valor
+
+    @property
+    def valor(self):
+        return self._valor
 
     def registrar(self, conta):
         sucesso = conta.sacar(self.valor)
@@ -36,7 +45,9 @@ class Saque(Transacao):
 class Deposito(Transacao):
     def __init__(self, valor: float):
         self.valor = valor
-
+    @property
+    def valor(self):
+        return self._valor
     def registrar(self, conta):
         sucesso = conta.depositar(self.valor)
         if sucesso:
