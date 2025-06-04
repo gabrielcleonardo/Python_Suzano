@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime
 from abc import ABC, abstractmethod
 
 class Cliente:
@@ -20,6 +20,9 @@ class PessoaFisica(Cliente):
         self.data_nascimento = data_nascimento
 
 class Transacao(ABC):
+    def __init__(self):
+        self.data = datetime.now()
+
     @property
     @abstractmethod
     def valor(self):
@@ -29,9 +32,13 @@ class Transacao(ABC):
     def registrar(self, conta):
         pass
 
+    def __str__(self):
+        return f"{self.__class__.__name__} em {self.data.strftime('%d/%m/%Y %H:%M:%S')}: R$ {self.valor:.2f}"
+
 class Saque(Transacao):
     def __init__(self, valor: float):
-        self.valor = valor
+        super().__init__()
+        self._valor = valor
 
     @property
     def valor(self):
@@ -44,10 +51,13 @@ class Saque(Transacao):
 
 class Deposito(Transacao):
     def __init__(self, valor: float):
-        self.valor = valor
+        super().__init__()
+        self._valor = valor
+
     @property
     def valor(self):
         return self._valor
+
     def registrar(self, conta):
         sucesso = conta.depositar(self.valor)
         if sucesso:
@@ -55,14 +65,14 @@ class Deposito(Transacao):
 
 class Historico:
     def __init__(self):
-        self.transacoes = []
+        self._transacoes = []
 
     @property
     def transacoes(self):
         return self._transacoes
 
     def adicionar_transacao(self, transacao):
-        self.transacoes.append(transacao)
+        self._transacoes.append(transacao)
 
 class Conta:
     def __init__(self, numero, cliente):
@@ -115,6 +125,19 @@ class ContaCorrente(Conta):
             return True
         return False
 
+# ===== Funções auxiliares =====
+
+def buscar_cliente(cpf, clientes):
+    clientes_filtrados = [c for c in clientes if c.cpf == cpf]
+    return clientes_filtrados[0] if clientes_filtrados else None
+
+def recuperar_conta_cliente(cliente):
+    if not cliente.contas:
+        print("Cliente não possui conta.")
+        return None
+    return cliente.contas[0]
+
+# ===== Menu principal =====
 
 def main():
     clientes = []
@@ -174,8 +197,11 @@ def main():
             conta = recuperar_conta_cliente(cliente)
             if conta:
                 print("\n====== EXTRATO ======")
-                for transacao in conta.historico.transacoes:
-                    print(f"{transacao['tipo']}: R$ {transacao['valor']:.2f}")
+                if not conta.historico.transacoes:
+                    print("Não foram realizadas movimentações.")
+                else:
+                    for transacao in conta.historico.transacoes:
+                        print(transacao)
                 print(f"\nSaldo atual: R$ {conta.saldo:.2f}")
                 print("======================")
 
@@ -203,7 +229,7 @@ def main():
                 continue
 
             numero_conta = len(contas) + 1
-            conta = ContaCorrente(cliente, numero=numero_conta)
+            conta = ContaCorrente(numero=numero_conta, cliente=cliente)
             cliente.adicionar_conta(conta)
             contas.append(conta)
             print("✅ Conta criada com sucesso!")
@@ -217,17 +243,12 @@ Titular: {conta.cliente.nome}
 """)
 
         elif opcao == "q":
+            print("Saindo do sistema... 👋")
             break
 
         else:
             print("Opção inválida, tente novamente.")
 
-def buscar_cliente(cpf, clientes):
-    clientes_filtrados = [c for c in clientes if c.cpf == cpf]
-    return clientes_filtrados[0] if clientes_filtrados else None
-
-def recuperar_conta_cliente(cliente):
-    if not cliente.contas:
-        print("Cliente não possui conta.")
-        return None
-    return cliente.contas[0]
+# Executa o programa
+if __name__ == "__main__":
+    main()
