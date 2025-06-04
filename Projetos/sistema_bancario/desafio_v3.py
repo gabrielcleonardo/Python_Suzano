@@ -81,4 +81,24 @@ class Conta:
     def nova_conta(cls, cliente, numero):
         return cls(numero, cliente)
 
+class ContaCorrente(Conta):
+    def __init__(self, numero, cliente, limite=500, limite_saques=3):
+        super().__init__(numero, cliente)
+        self.limite = limite
+        self.limite_saques = limite_saques
+        self._saques_realizados = 0
+
+    def sacar(self, valor):
+        if self._saques_realizados >= self.limite_saques:
+            print("❌ Limite de saques diários excedido.")
+            return False
+        if valor > self.limite:
+            print("❌ Valor excede o limite de saque por operação.")
+            return False
+        if super().sacar(valor):
+            self._saques_realizados += 1
+            return True
+        return False
+
+
 
