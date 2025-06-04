@@ -57,6 +57,10 @@ class Historico:
     def __init__(self):
         self.transacoes = []
 
+    @property
+    def transacoes(self):
+        return self._transacoes
+
     def adicionar_transacao(self, transacao):
         self.transacoes.append(transacao)
 
